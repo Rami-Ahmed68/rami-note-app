@@ -39,5 +39,5 @@ _(You can replace this link later when you deploy it on Vercel or Render)_
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/rami-note-app.git
+git clone https://github.com/Rami-Ahmed68/rami-note-app.git
 cd rami-note-app
