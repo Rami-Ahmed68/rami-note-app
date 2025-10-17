@@ -12,16 +12,27 @@ export default function Home() {
     }
   }, []);
   return (
-    <Box
-      w="100%"
-      h="90vh"
-      //  bg="green"
-    >
+    <Box w="100%" h="90vh">
       <Heading
         mb={4}
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignContent={"center"}
         borderBottom={"1px solid"}
         borderColor={"border-secondary"}>
         My Notes
+        <Box
+          fontSize="sm"
+          w="40px"
+          h="40px"
+          bg="purple"
+          borderRadius={"5px"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}>
+          {" "}
+          {notes.length}{" "}
+        </Box>
       </Heading>
       <VStack
         spacing={4}

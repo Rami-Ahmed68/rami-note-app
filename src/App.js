@@ -9,7 +9,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <Flex className="App" direction="column" h="100vh" w="98%" m="0px 1%" p="3px">
+    <Flex className="App" direction="column" h="100vh" w="100%"  p="10px">
       <Nav />
       <Stack 
         flex="1" 
