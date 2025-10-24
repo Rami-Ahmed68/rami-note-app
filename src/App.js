@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import NoteDetails from "./pages/NoteDetails";
 import AddNote from "./pages/AddNote.jsx";
 import Nav from "./components/global/Nav";
+import { Update } from "./pages/Update.jsx";
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/noteDetails" element={<NoteDetails />} />
             <Route path="/addnote" element={<AddNote />} />
+            <Route path="/update/:id" element={<Update />} />
           </Routes>
         </SlideFade>
       </Stack>

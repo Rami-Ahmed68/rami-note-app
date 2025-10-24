@@ -1,16 +1,12 @@
 import NoteCard from "../components/NoteCard";
 import { Box, VStack, Heading } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { NoteContext } from "../components/hooks/noteContext";
 
 export default function Home() {
-  const [notes, setNotes] = useState([]);
+  const { notes } = useContext(NoteContext);
+  console.log(notes);
 
-  useEffect(() => {
-    const savedNotes = localStorage.getItem("rami-note-app");
-    if (savedNotes) {
-      setNotes(JSON.parse(savedNotes));
-    }
-  }, []);
   return (
     <Box w="100%" h="90vh">
       <Heading
@@ -20,7 +16,7 @@ export default function Home() {
         alignContent={"center"}
         borderBottom={"1px solid"}
         borderColor={"border-secondary"}>
-        My Notes
+        My Notes 📝
         <Box
           fontSize="sm"
           w="40px"
@@ -53,8 +49,8 @@ export default function Home() {
             borderRadius: "8px",
           },
         }}>
-        {notes.map((note, index) => (
-          <NoteCard props={note} key={index} />
+        {notes.map((note) => (
+          <NoteCard note={note} key={note.id} />
         ))}
       </VStack>
     </Box>

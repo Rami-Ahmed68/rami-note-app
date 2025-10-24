@@ -7,78 +7,45 @@ import {
   Button,
   Heading,
 } from "@chakra-ui/react";
-import { useState, useContext } from "react";
-import { useNotification } from "../components/hooks/useNotification";
+import { useState, useContext, useEffect } from "react";
 import { NoteContext } from "../components/hooks/noteContext";
+import { useParams } from "react-router-dom";
 
-function AddNote() {
-  const { AddNote } = useContext(NoteContext);
-
+export function Update() {
   const [titleLength, setTitleLength] = useState(0);
   const [descriptionLength, setDescriptionLength] = useState(0);
+  const [titleValue, setTitleValue] = useState("");
+  const [descriptionValue, setDescriptionValue] = useState("");
+  const [createdAtValue, setCreatedAtValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { GetNote } = useContext(NoteContext);
 
-  const { showSuccess, showError } = useNotification();
+  const note = GetNote(useParams().id);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // To get the values direct from the DOM
-    const titleInput = document.getElementById("title");
-    const descriptionInput = document.getElementById("description");
-
-    const titleValue = titleInput.value;
-    const descriptionValue = descriptionInput.value;
-
-    //! show error message
-    if (!titleValue.trim() || !descriptionValue.trim()) {
-      showError("Please fill in both title and description!");
-      return;
+  useEffect(() => {
+    if (note) {
+      setTitleValue(note.title || "");
+      setDescriptionValue(note.description || "");
+      setCreatedAtValue(note.created_at || "");
+      setTitleLength(note.title?.length || 0);
+      setDescriptionLength(note.description?.length || 0);
     }
-
-    //! show error message
-    if (titleValue.length < 3) {
-      showError("Title must be at least 3 characters long!");
-      return;
-    }
-
-    //! show error message
-    if (descriptionValue.length < 10) {
-      showError("Description must be at least 10 characters long!");
-      return;
-    }
-
-    // To start the loading icon in button
-    setIsLoading(true);
-
-    try {
-      // API Simulators
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      //* show success
-      showSuccess("Note created successfully! 🎉");
-
-      AddNote({ title: titleValue, description: descriptionValue });
-
-      // Reset empty values
-      titleInput.value = "";
-      descriptionInput.value = "";
-      setTitleLength(0);
-      setDescriptionLength(0);
-    } catch (error) {
-      showError("Failed to create note. Please try again! 😔");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [note]);
 
   return (
-    <>
-      <Heading borderBottom={"1px solid"} borderColor={"border-secondary"}>
-        Add New Note 📝
+    <Box
+      display={"flex"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+      flexWrap={"wrap"}>
+      <Heading
+        borderBottom={"1px solid"}
+        borderColor={"border-secondary"}
+        w="100%">
+        Update note 📝
       </Heading>
 
-      <FormControl m="10px 0px">
+      <FormControl m="10px 0px" w="49%">
         <FormLabel
           htmlFor="title"
           fontWeight="medium"
@@ -97,6 +64,7 @@ function AddNote() {
             {titleLength}
           </Box>
         </FormLabel>
+
         <Input
           id="title"
           placeholder="Type title here ..."
@@ -106,6 +74,42 @@ function AddNote() {
           bg="bg-input"
           color="text-primary"
           border={"1px solid"}
+          value={titleValue}
+          borderColor={"border-secondary"}
+          onChange={(e) => setTitleLength(e.target.value.length)}
+        />
+      </FormControl>
+
+      <FormControl m="10px 0px" w="49%">
+        <FormLabel
+          htmlFor="date"
+          fontWeight="medium"
+          color="text-primary"
+          borderBottom={"1px solid"}
+          borderColor={"border-primary"}
+          display={"flex"}
+          justifyContent={"space-between"}>
+          Date of created ⏰
+          <Box
+            p="3px"
+            fontSize={"small"}
+            borderRadius="5px"
+            bg="purple"
+            color="white">
+            {titleLength}
+          </Box>
+        </FormLabel>
+
+        <Input
+          id="date"
+          placeholder="Type title here ..."
+          type="text"
+          size="lg"
+          focusBorderColor="blue.500"
+          bg="bg-input"
+          color="text-primary"
+          border={"1px solid"}
+          value={createdAtValue}
           borderColor={"border-secondary"}
           onChange={(e) => setTitleLength(e.target.value.length)}
         />
@@ -140,13 +144,13 @@ function AddNote() {
           bg="bg-input"
           color="text-primary"
           border={"1px solid"}
+          value={descriptionValue}
           borderColor={"border-secondary"}
           onChange={(e) => setDescriptionLength(e.target.value.length)}
         />
       </FormControl>
 
       <Button
-        onClick={handleSubmit}
         bg="purple"
         color="white"
         size="lg"
@@ -160,10 +164,8 @@ function AddNote() {
           bg: "purple.600",
         }}
         transition="all 0.2s">
-        Add Note
+        Update Note
       </Button>
-    </>
+    </Box>
   );
 }
-
-export default AddNote;

@@ -54,6 +54,10 @@ export const theme = extendTheme({
         default: "#efefefec",
         _dark: "#2c2b2bff",
       },
+      "bg-card-status": {
+        default: "#d0d0d0ec",
+        _dark: "#3f3f3fff",
+      },
       "bg-input": {
         default: "white",
         _dark: "#333",
