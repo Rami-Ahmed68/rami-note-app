@@ -10,6 +10,8 @@ import {
 import { useState, useContext, useEffect } from "react";
 import { NoteContext } from "../components/hooks/noteContext";
 import { useParams } from "react-router-dom";
+import { useNotification } from "../components/hooks/useNotification";
+import { useNavigate } from "react-router-dom";
 
 export function Update() {
   const [titleLength, setTitleLength] = useState(0);
@@ -18,9 +20,11 @@ export function Update() {
   const [descriptionValue, setDescriptionValue] = useState("");
   const [createdAtValue, setCreatedAtValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { GetNote } = useContext(NoteContext);
-
-  const note = GetNote(useParams().id);
+  const { GetNote, UpdateNote } = useContext(NoteContext);
+  const { id } = useParams();
+  const note = GetNote(id);
+  const { showSuccess, showError } = useNotification();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (note) {
@@ -31,6 +35,30 @@ export function Update() {
       setDescriptionLength(note.description?.length || 0);
     }
   }, [note]);
+
+  const handelUpdate = async () => {
+    setIsLoading(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      //* show success
+      showSuccess("Note Updated successfully! 🎉");
+
+      UpdateNote(note.id, {
+        title: titleValue,
+        description: descriptionValue,
+        created_at: createdAtValue,
+      });
+
+      setIsLoading(false);
+
+      navigate(`/`);
+    } catch (error) {
+      showError("Failed to update note. Please try again! 😔");
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -76,7 +104,10 @@ export function Update() {
           border={"1px solid"}
           value={titleValue}
           borderColor={"border-secondary"}
-          onChange={(e) => setTitleLength(e.target.value.length)}
+          onChange={(e) => {
+            setTitleValue(e.target.value);
+            setTitleLength(e.target.value.length);
+          }}
         />
       </FormControl>
 
@@ -90,19 +121,11 @@ export function Update() {
           display={"flex"}
           justifyContent={"space-between"}>
           Date of created ⏰
-          <Box
-            p="3px"
-            fontSize={"small"}
-            borderRadius="5px"
-            bg="purple"
-            color="white">
-            {titleLength}
-          </Box>
         </FormLabel>
 
         <Input
           id="date"
-          placeholder="Type title here ..."
+          placeholder="Type date here ..."
           type="text"
           size="lg"
           focusBorderColor="blue.500"
@@ -111,7 +134,7 @@ export function Update() {
           border={"1px solid"}
           value={createdAtValue}
           borderColor={"border-secondary"}
-          onChange={(e) => setTitleLength(e.target.value.length)}
+          onChange={(e) => setCreatedAtValue(e.target.value)}
         />
       </FormControl>
 
@@ -146,18 +169,22 @@ export function Update() {
           border={"1px solid"}
           value={descriptionValue}
           borderColor={"border-secondary"}
-          onChange={(e) => setDescriptionLength(e.target.value.length)}
+          onChange={(e) => {
+            setDescriptionValue(e.target.value);
+            setDescriptionLength(e.target.value.length);
+          }}
         />
       </FormControl>
 
       <Button
+        onClick={handelUpdate}
+        isLoading={isLoading}
         bg="purple"
         color="white"
         size="lg"
         mt={4}
         w="100%"
-        isLoading={isLoading}
-        loadingText="Creating Note..."
+        loadingText="Updating Note..."
         _hover={{
           transform: "translateY(-1px)",
           boxShadow: "lg",

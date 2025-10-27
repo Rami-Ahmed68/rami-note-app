@@ -73,6 +73,22 @@ export const NoteProvider = ({ children }) => {
      return note;
   };
 
+    // update the note method
+const UpdateNote = (note_id, updatedData) => {
+  setNotes((prevNotes) =>
+    prevNotes.map((note) =>
+      note.id === note_id
+        ? {
+            ...note,
+            title: updatedData.title,
+            description: updatedData.description,
+            created_at: updatedData.created_at,
+          }
+        : note
+    )
+  );
+};
+
   const value = {
     notes,
     AddNote,
@@ -80,6 +96,7 @@ export const NoteProvider = ({ children }) => {
     ClearAllNotes,
     ChangeStatus,
     GetNote,
+    UpdateNote
   };
 
   return <NoteContext.Provider value={value}>{children}</NoteContext.Provider>;

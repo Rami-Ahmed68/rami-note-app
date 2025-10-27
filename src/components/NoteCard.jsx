@@ -66,7 +66,9 @@ export default function NoteCard({ note }) {
           {note.title}
         </Heading>
         <Text fontSize="sm" noOfLines={2} color="text-secondary">
-          {note.description}
+          {note.description.length > 60
+            ? note.description.slice(0, 60)
+            : note.description}{" "}
         </Text>
 
         <HStack spacing={2} color="text-muted" fontSize="xs">
